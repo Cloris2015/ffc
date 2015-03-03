@@ -1,0 +1,64 @@
+﻿@model IEnumerable<DataModel.Order>
+
+@{
+    ViewBag.Title = "Order List";
+}
+
+<h2>Order List</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Add")
+</p>
+<table class="table table-striped table-condensed table table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tax)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Shipping)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Merchant)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Note)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Shipping)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Merchant)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "editlink", orderid = item.ID })|
+                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "detaillink", detailid = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "deletelink", orderid = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>

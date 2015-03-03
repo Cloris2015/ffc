@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DataModel.User>
+
+@{
+    ViewBag.Title = "User List";
+}
+<h2>User List</h2>
+
+<p>
+    @Html.ActionLink("Add New User", "Add")
+</p>
+<table class=" table table-striped table-bordered" cellspacing="0" style="width:100%" id=" table-pagination" data-pagination="true" data-search="true">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Phone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BOD)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BOD)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "deletelink", userId = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="col-md-12 text-center">
+    <ul class="pagination pagination-lg pager" id="myPager"></ul>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        var url = '@Url.Content("~/api/GetUser")';
+        $.getJSON(url, function (data) {
+            $.each(data,function(key,val)
+            {
+                alert(val.Name);
+            })
+        });
+
+        $(document).ready(function () {
+            $('.deletelink').click(
+                function (evt) {
+                    evt.preventDefault();
+                    if (!confirm("Are you sure to delete?")) {
+                        return false;
+                    }
+                    var id = this.attributes["userId"].value;
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Content("~/User/Delete")',
+                        data: { id: id }
+                    })
+                    .done(
+                    function (data, textStatus, jqXHR) {
+                             document.location.reload();
+                       }
+                    )
+                   
+                });
+                    
+        });
+    </script>
+}

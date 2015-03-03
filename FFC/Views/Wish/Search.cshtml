@@ -1,0 +1,106 @@
+﻿@model IEnumerable<FFC.Models.ViewModel.WishView>
+           @using DataModel;
+
+@{
+    ViewBag.Title = "Wish lists";
+    //var users = ((IEnumerable<User>)ViewBag.userlist);
+    //var userlist = (from u in users 
+    //               select new SelectListItem{ Text = u.Name, Value = u.ID.ToString(), Selected = false }).ToList();
+    //userlist.Insert(0, new SelectListItem { Text = "-- select --", Value = "", Selected = true });
+}
+<h2>Index</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div>
+        <table style="width:900px;">
+        <tr><td style="width:60px">User</td><td style="width:150px"><select name="UserID" id="userlist"></select></td>
+            <td style="width:60px">Status</td>
+<td style="width:210px"><select name="Status"><option value="">---Select---</option><option value="1">New</option><option value="2">Approved</option><option value="3">Disapproved</option></select></td><td style="width:60px">Item</td><td style="width:150px"><input name="Item" type="text"  value='@ViewData["Item"]' /></td></tr>
+      <tr><td style="width:60px">Start Date:</td><td style="width:150px"><input type="text" name="StartDate" id="Startdate"></td><td style="width:60px">End Date:</td><td style="width:150px"><input type="text" name="EndDate" id="Enddate"></td><td style="width:60px"><input id="btnSubmit" type="submit" value="submit" /></td><td colspan="2" style="width:210px"></td></tr>
+        </table>
+    </div>
+}
+<br />
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wish.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wish.Item)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wish.Note)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wish.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wish.LastUpdate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wish.LastUpdatedBy)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+              @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Wish.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Wish.Item)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Wish.Note)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Wish.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Wish.LastUpdate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Wish.LastUpdatedBy)
+            </td>
+   
+        </tr>
+    }
+
+</table>
+
+@section scripts {
+   <script>
+        $(function () {
+            $("#Startdate").datepicker();
+            $("#Enddate").datepicker();
+
+        }
+            );
+       var url='@Url.Content("~/api/GetUser")';
+       $(document).ready(function()
+       {
+            $.getJSON(url)
+           .done(function(data){
+               var userlist=$('#userlist');
+               $.each(data,function(key,v){
+                  userlist.append($('<option>', { value: v.ID})
+                 .text(v.Name));
+               
+               })
+           })
+       })
+
+    </script>
+   
+}
