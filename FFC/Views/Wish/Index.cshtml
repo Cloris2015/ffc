@@ -9,105 +9,109 @@
 <p>
     @Html.ActionLink("Create New", "Add")
 </p>
-<table id="datatable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
-    <thead>
-        <tr>
-            <th data-align="center">
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th data-sortable="true">
-                @Html.DisplayNameFor(model => model.Wish.Date)
-            </th>
-            <th data-align="center">
-                @Html.DisplayNameFor(model => model.Wish.Item)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Wish.Note)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Wish.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Wish.LastUpdate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Wish.LastUpdatedBy)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Wish.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Wish.Item)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Wish.Note)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Wish.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Wish.LastUpdate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Wish.LastUpdatedBy)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Wish.ID }, new { @class = "Editlink", itemid = item.Wish.ID, status = item.Wish.Status }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Wish.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Wish.ID }, new { @class = "deletelink", itemid = item.Wish.ID, status = item.Wish.Status })
-            </td>
-        </tr>
-    }
+<div class="container">
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered" cellspacing="0" style="width:100%" id="table-pagination">
+            <thead>
+                <tr>
+                    <th data-align="center">
+                        @Html.DisplayNameFor(model => model.UserName)
+                    </th>
+                    <th data-sortable="true">
+                        @Html.DisplayNameFor(model => model.Wish.Date)
+                    </th>
+                    <th data-align="center">
+                        @Html.DisplayNameFor(model => model.Wish.Item)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Wish.Note)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Wish.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Wish.LastUpdate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Wish.LastUpdatedBy)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="datatable">
 
-</table>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Wish.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Wish.Item)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Wish.Note)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Wish.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Wish.LastUpdate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Wish.LastUpdatedBy)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Wish.ID }, new { @class = "Editlink", itemid = item.Wish.ID, status = item.Wish.Status }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.Wish.ID }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Wish.ID }, new { @class = "deletelink", itemid = item.Wish.ID, status = item.Wish.Status })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+    <div class="col-md-12 text-center">
+        <ul class="pagination pagination-lg pager" id="myPager"></ul>
+    </div>
+</div>
 @section scripts {
     <script>
-
-        $(document).ready(function () {
-            $('.Editlink').click(function () {
-                if (this.attributes['status'].value!="New")
-                {
+          $('.Editlink').click(function () {
+                if (this.attributes['status'].value != "New") {
                     alert("Approved or canceled wish can not be modified!");
                     return false;
                 }
             });
-     $('.deletelink').click(function ()
-            {
-            if (this.attributes['status'].value != "New") {
+            $('.deletelink').click(function () {
+                if (this.attributes['status'].value != "New") {
                     alert("Approved or canceled order can not be deleted!");
                     return false;
                 }
-               if (!confirm("Are you sure to delete?"))
-                {
+                if (!confirm("Are you sure to delete?")) {
                     return false;
                 }
-               
+
                 var id = this.attributes['itemid'].value;
                 $.ajax(
                     {
                         type: "POST",
                         url: '@Url.Content("~/Wish/Delete")',
-                        data: {id:id}
+                        data: { id: id }
 
                     })
-                .done(function()
-                {
+                .done(function () {
                     document.location.reload();
                 }
                 )
             })
-        });
+         $('#datatable').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage: 2 });
 
     </script>
-    
-
 }
